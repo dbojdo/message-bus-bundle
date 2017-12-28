@@ -1,0 +1,42 @@
+version: '2'
+services:
+    src:
+        build : ./docker/php
+        volumes:
+            - .:/var/www/html
+            - ./docker/php/config:/usr/local/etc/php/conf.d
+            - ~/.composer:/root/.composer
+        working_dir: /var/www/html
+
+    phpunit:
+        extends:
+          service: src
+        command: ./vendor/bin/phpunit
+
+    behat:
+        extends:
+          service: src
+        command: ./vendor/bin/behat
+        links:
+          - rabbitmq
+
+#    integration-tests:
+#        extends:
+#          service: src
+#        links:
+#            - rabbitmq
+#        command: ./vendor/bin/phpunit -c tests/integration/phpunit.xml.dist
+
+    composer:
+        extends:
+            service: src
+        command: composer install -o -n
+
+    rabbitmq:
+        image: rabbitmq:management
+        ports:
+            - "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: "rabbitmq"
+            RABBITMQ_DEFAULT_PASS: "rabbitmq"
+            RABBITMQ_DEFAULT_VHOST: "/"

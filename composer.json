@@ -1,0 +1,59 @@
+{
+    "name": "webit/message-bus-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony integration for Message Bus",
+    "keywords": [
+        "message bus",
+        "message queue",
+        "amqp",
+        "rabbitmq",
+        "rabbit"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Bojdo",
+            "email": "daniel@bojdo.eu"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "webit/message-bus": "^1.0",
+        "webit/message-bus-infrastructure": "^1.0",
+        "symfony/framework-bundle": "^3.0|^4.0"
+    },
+    "require-dev": {
+        "webit/message-bus-amqp": "^1.0",
+        "webit/message-bus-sf-event-dispatcher": "^1.0",
+        "jms/serializer-bundle": "^2.2.0",
+        "phpunit/phpunit": "^6.0",
+        "behat/behat": "^3.0",
+        "webit/test-tools": "^1.0"
+    },
+    "suggest": {
+        "webit/message-bus-amqp": "To use AMQP infrastructure",
+        "webit/message-bus-sf-event-dispatcher": "To use Symfony Event Dispatcher infrastructure"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webit\\MessageBusBundle\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/",
+            "/Features/",
+            "/docker/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Webit\\MessageBusBundle\\": "Tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

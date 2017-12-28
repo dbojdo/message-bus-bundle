@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service
+                id="webit_message_bus.event_dispatcher.listener.message_factory.message_type_resolver.from_event_name"
+                class="Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\Type\EventNameMessageTypeResolver"
+                public="false" />
+
+        <service
+                id="webit_message_bus.event_dispatcher.listener.message_factory.content_provider.event_only"
+                class="Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\Content\EventOnlySerialisationDataProvider"
+                public="false" />
+
+        <service
+                id="webit_message_bus.event_dispatcher.publisher.event_factory.event_name_resolver.from_message_type"
+                class="Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Publisher\Event\Name\FromMessageTypeEventNameResolver"
+                public="false" />
+
+    </services>
+</container>
