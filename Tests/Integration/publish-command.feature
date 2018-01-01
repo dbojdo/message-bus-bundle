@@ -10,11 +10,13 @@ Feature: Publish command
         secret: "my-secret-hash"
 
     services:
+        message_cache:
+            class: Doctrine\Common\Cache\FilesystemCache
+            arguments: ["%kernel.cache_dir%/messages"]
+
         publisher:
             class: Webit\MessageBusBundle\Tests\Integration\Context\Bootstrap\Fake\Publisher\CommandPublisher
-            arguments:
-                - "%kernel.cache_dir%"
-                - "@logger"
+            arguments: ["@message_cache"]
             tags:
                 - { name: webit_message_bus.publisher, publisher: my_publisher }
     """
@@ -24,5 +26,5 @@ Feature: Publish command
     """
     webit_message_bus: ~
     """
-    When I publish the message to the "my_publisher"
+    When I publish the message to the "my_publisher" publisher using command
     Then the message should be published

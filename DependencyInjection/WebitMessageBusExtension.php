@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Webit\MessageBusBundle\DependencyInjection\Amqp\Extension\AmqpExtensionHelper;
+use Webit\MessageBusBundle\DependencyInjection\Command\Extension\CommandExtensionHelper;
 use Webit\MessageBusBundle\DependencyInjection\Compiler\PublisherTag;
 use Webit\MessageBusBundle\DependencyInjection\EventDispatcher\Extension\EventDispatcherExtensionHelper;
 
@@ -34,7 +35,14 @@ class WebitMessageBusExtension extends Extension
 
         $loader->load('publishers.xml');
 
-        $this->configurePublishers($config['publishers'], $container, $amqpHelper, $eventDispatcherHelper);
+        $this->configurePublishers(
+            $config['publishers'],
+            $container,
+            $amqpHelper,
+            $eventDispatcherHelper,
+            new CommandExtensionHelper()
+        );
+
         $this->configureListeners($config['listeners'], $container, $amqpHelper, $eventDispatcherHelper);
     }
 
@@ -42,7 +50,8 @@ class WebitMessageBusExtension extends Extension
         array $config,
         ContainerBuilder $container,
         AmqpExtensionHelper $amqpHelper,
-        EventDispatcherExtensionHelper $eventDispatcherHelper
+        EventDispatcherExtensionHelper $eventDispatcherHelper,
+        CommandExtensionHelper $commandExtensionHelper
     ) {
         foreach ($config as $publisherName => $publisherConfig) {
             switch (true) {
@@ -50,8 +59,16 @@ class WebitMessageBusExtension extends Extension
                     $publisherDefinition = $amqpHelper->createPublisher($publisherName, $publisherConfig['amqp']);
                     break;
                 case isset($publisherConfig['event_dispatcher']):
-                    $publisherDefinition = $eventDispatcherHelper->createPublisher($publisherName,
-                        $publisherConfig['event_dispatcher']);
+                    $publisherDefinition = $eventDispatcherHelper->createPublisher(
+                        $publisherName,
+                        $publisherConfig['event_dispatcher']
+                    );
+                    break;
+                case isset($publisherConfig['command']):
+                    $publisherDefinition = $commandExtensionHelper->createPublisher(
+                        $publisherName,
+                        $publisherConfig['command']
+                    );
                     break;
                 default:
                     throw new InvalidConfigurationException(

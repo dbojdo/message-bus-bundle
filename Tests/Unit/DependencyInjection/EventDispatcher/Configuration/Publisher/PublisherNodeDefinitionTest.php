@@ -7,7 +7,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Webit\MessageBusBundle\DependencyInjection\EventDispatcher\Configuration\Publisher\PublisherNodeDefinition;
 use Webit\MessageBusBundle\Tests\Unit\DependencyInjection\AbstractConfigurationNodeTestCase;
 
-class PublisherEventDispatcherNodeDefinitionTest extends AbstractConfigurationNodeTestCase
+class PublisherNodeDefinitionTest extends AbstractConfigurationNodeTestCase
 {
 
     protected function createTestedNode(): ParentNodeDefinitionInterface

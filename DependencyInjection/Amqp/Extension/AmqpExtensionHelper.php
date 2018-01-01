@@ -18,7 +18,7 @@ use Webit\MessageBus\Infrastructure\Amqp\Publisher\ExchangePublicationTarget;
 use Webit\MessageBus\Infrastructure\Amqp\Publisher\QueuePublicationTarget;
 use Webit\MessageBus\Infrastructure\Amqp\Publisher\Routing\FromMessageTypeRoutingKeyResolver;
 use Webit\MessageBus\Publisher;
-use Webit\MessageBus\PublishingConsumer;
+use Webit\MessageBus\Consumer\PublishingConsumer;
 use Webit\MessageBusBundle\DependencyInjection\Amqp\ConnectionPoolTag;
 use Webit\MessageBusBundle\DependencyInjection\Amqp\ListenerTag;
 use Webit\MessageBusBundle\DependencyInjection\Amqp\PublisherTag;

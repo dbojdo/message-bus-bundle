@@ -22,8 +22,15 @@ if ($debug) {
 }
 
 $config = getenv('SF_KERNEL_CONFIG');
+if (!$config) {
+    throw new \RuntimeException('SF_KERNEL_CONFIG env variable must be set.');
+}
 
-$kernel = new AppKernel($env, $debug);
+if (!is_file($config)) {
+    throw new \RuntimeException(sprintf('Passed configuration file "%s" does not exist.', $config));
+}
+
+$kernel = new AppKernel($env, $debug, getenv('SF_KERNEL_HASH'));
 $kernel->appendConfig(file_get_contents($config));
 
 $application = new Application($kernel);

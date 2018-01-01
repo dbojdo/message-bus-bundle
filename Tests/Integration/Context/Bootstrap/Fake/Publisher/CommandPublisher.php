@@ -2,22 +2,21 @@
 
 namespace Webit\MessageBusBundle\Tests\Integration\Context\Bootstrap\Fake\Publisher;
 
-use Webit\MessageBus\Exception\MessagePublicationException;
+use Doctrine\Common\Cache\Cache;
 use Webit\MessageBus\Message;
 use Webit\MessageBus\Publisher;
 
 class CommandPublisher implements Publisher
 {
-    /** @var string */
-    private $cacheDir;
+    /** @var Cache */
+    private $cache;
 
-    /**
-     * CommandPublisher constructor.
-     * @param string $cacheDir
-     */
-    public function __construct(string $cacheDir)
+    /** @var int */
+    public static $counter = 1;
+
+    public function __construct(Cache $cache)
     {
-        $this->cacheDir = $cacheDir;
+        $this->cache = $cache;
     }
 
     /**
@@ -26,11 +25,6 @@ class CommandPublisher implements Publisher
      */
     public function publish(Message $message)
     {
-        file_put_contents(
-            $filename = sprintf('%s/%s.data', $this->cacheDir, md5(time().mt_rand(0, mt_getrandmax()))),
-            $message->type()."\n".$message->content()
-        );
-
-        echo sprintf('Published to: %s', $filename)."\n";
+        $this->cache->save('message_'.self::$counter++, $message);
     }
 }

@@ -13,8 +13,8 @@ use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\Con
 use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\FallingBackMessageFromEventFactory;
 use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\GenericMessageFromEventFactory;
 use Webit\MessageBus\Publisher;
-use Webit\MessageBus\PublishingConsumer;
-use Webit\MessageBus\VoidConsumer;
+use Webit\MessageBus\Consumer\PublishingConsumer;
+use Webit\MessageBus\Consumer\VoidConsumer;
 
 final class ListenerHelper
 {

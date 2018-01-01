@@ -4,6 +4,7 @@ namespace Webit\MessageBusBundle\Tests\Integration\Context;
 
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Doctrine\Common\Cache\Cache;
 use JMS\Serializer\EventDispatcher\Event;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
@@ -56,8 +57,8 @@ final class BundleContext extends BundleConfigurationContext
     /** @var array */
     private $queues = [];
 
-    /** @var Message */
-    private $publishedMessage;
+    /** @var Message[] */
+    private $publishedMessages;
 
     /** @var array */
     private $execResult;
@@ -185,6 +186,8 @@ final class BundleContext extends BundleConfigurationContext
      */
     public function transformPublisher($publisher)
     {
+        $this->iBootstrapTheApplication();
+
         $container = $this->kernel->getContainer();
 
         /** @var \Webit\MessageBus\PublisherRegistry $amqpPublisherRegistry */
@@ -197,6 +200,7 @@ final class BundleContext extends BundleConfigurationContext
      * @Then the message :messageType should be publishable over :publisher Symfony Event Dispatcher publisher
      * @param string $messageType
      * @param Publisher $publisher
+     * @throws Publisher\Exception\MessagePublicationException
      */
     public function theFollowingMessagesShouldBePublishableOverSymfonyEventDispatcherPublisher(
         $messageType,
@@ -393,6 +397,7 @@ final class BundleContext extends BundleConfigurationContext
      * @param string $eventName
      * @param EventDispatcherInterface $service
      * @param ObjectProphecy|Consumer $mockedConsumer
+     * @throws Consumer\Exception\MessageConsumptionException
      */
     public function theEventDispatcherListenerShouldConsumeEventsFromTheEventDispatcherUsingConsumer(
         string $eventName,
@@ -443,21 +448,31 @@ final class BundleContext extends BundleConfigurationContext
     }
 
     /**
-     * @When I publish the message to the :publisherName
+     * @When I publish the message to the :publisher publisher
+     */
+    public function iPublishTheMessageToThePublisher(Publisher $publisher)
+    {
+        $this->iBootstrapTheApplication();
+
+        $this->publishedMessages[] = $message = new Message($this->randomString(4, 12), $this->randomString(4, 12));
+
+        $publisher->publish($message);
+    }
+
+    /**
+     * @When I publish the message to the :publisherName publisher using command
      */
     public function iPublishTheMessageToThe(string $publisherName)
     {
         $this->iBootstrapTheApplication();
 
-        $this->publishedMessage = new Message($this->randomString(), $this->randomString());
+        $this->publishedMessages[] = $message = new Message($this->randomString(4, 12), $this->randomString(4, 12));
         $command = sprintf(
             __DIR__.'/Bootstrap/bin/console webit_message_bus:publish %s %s %s',
             escapeshellarg($publisherName),
-            escapeshellarg($this->publishedMessage->type()),
-            escapeshellarg($this->publishedMessage->content())
+            escapeshellarg($message->type()),
+            escapeshellarg($message->content())
         );
-
-        putenv("SF_KERNEL_CONFIG=". $this->kernel->dumpConfig());
 
         exec($command, $output, $exitCode);
         $this->execResult = [$exitCode, implode("\n", (array)$output)];
@@ -468,16 +483,43 @@ final class BundleContext extends BundleConfigurationContext
      */
     public function theMessageShouldBePublished()
     {
-        list($exitCode, $output) = $this->execResult;
+        /** @var Cache $cache */
+        $cache = $this->kernel->getContainer()->get('message_cache');
 
-        if ($exitCode == 0 && preg_match('/Published\ to\:\ (.*)/', $output, $matches)) {
-            @list($type, $content) = explode("\n", file_get_contents($matches[1]), 2);
-            $message = new Message((string)$type, (string)$content);
-            Assert::assertEquals($this->publishedMessage, $message);
+        Assert::assertTrue($cache->contains('message_1'));
+        Assert::assertEquals($this->publishedMessages[0], $cache->fetch('message_1'));
+    }
 
-            return;
+    /**
+     * @Then the messages should be published asynchronously
+     */
+    public function theMessagesShouldBePublishedAsynchronously()
+    {
+        $maxWait = 3 * 1000000;
+        $waited = 0;
+        do {
+            $allGood = $this->checkMessages();
+            if (!$allGood) {
+                usleep(500000);
+                $waited += 500000;
+            }
+        } while(!$allGood && $waited < $maxWait);
+
+        Assert::assertTrue($allGood, 'Not all of the messages has been published correctly.');
+    }
+
+    private function checkMessages()
+    {
+        $file = file_get_contents($logFile = $this->kernel->getContainer()->getParameter('kernel.logs_dir'). '/messages.log');
+
+        $allDone = true;
+        foreach ($this->publishedMessages as $message) {
+            if (false ===strpos($file, sprintf('[%s:%s] Done', $message->type(), $message->content()))) {
+                $allDone = false;
+                break;
+            }
         }
 
-        throw new \RuntimeException('Published message could not be found.');
+        return $allDone;
     }
 }
