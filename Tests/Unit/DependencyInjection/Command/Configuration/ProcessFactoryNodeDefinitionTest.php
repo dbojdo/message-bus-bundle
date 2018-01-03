@@ -18,6 +18,7 @@ class ProcessFactoryNodeDefinitionTest extends AbstractConfigurationNodeTestCase
         return [
             'process_factory' => [
                 'binary_path' => '%kernel.root_dir%/../bin/console',
+                'command' => 'webit_message_bus:publish',
                 'environment' => '%kernel.environment%',
                 'env_vars' => []
             ]

@@ -3,12 +3,19 @@
 namespace Webit\MessageBusBundle\Command\Publisher;
 
 use Symfony\Component\Process\Process;
+use Webit\MessageBus\Infrastructure\Symfony\Process\Launcher\ProcessFactory;
 use Webit\MessageBus\Message;
 
-class ProcessFactory
+final class PublishCommandProcessFactory implements ProcessFactory
 {
     /** @var string */
     private $binaryPath;
+
+    /** @var string */
+    private $command;
+
+    /** @var string */
+    private $publisherName;
 
     /** @var string */
     private $environment;
@@ -18,27 +25,33 @@ class ProcessFactory
 
     public function __construct(
         string $binaryPath,
+        string $command,
+        string $publisherName,
         string $environment = 'prod',
         array $environmentVars = []
     ) {
         $this->binaryPath = $binaryPath;
+        $this->publisherName = $publisherName;
         $this->environment = $environment;
         $this->environmentVars = $environmentVars;
+        $this->command = $command;
     }
 
-    public function create(Message $message, string $publisherName): Process
+    /**
+     * @inheritdoc
+     */
+    public function create(Message $message)
     {
         $command = sprintf(
-            "%s 'webit_message_bus:publish' %s %s %s --env=%s -q",
+            "%s '%s' %s %s %s --env=%s -q",
             escapeshellarg($this->binaryPath),
-            escapeshellarg($publisherName),
+            escapeshellarg($this->command),
+            escapeshellarg($this->publisherName),
             escapeshellarg($message->type()),
             escapeshellarg($message->content()),
             escapeshellarg($this->environment)
         );
 
-        $p = new Process($command, dirname($this->binaryPath), $this->environmentVars);
-
-        return $p;
+        return new Process($command, dirname($this->binaryPath), $this->environmentVars);
     }
 }

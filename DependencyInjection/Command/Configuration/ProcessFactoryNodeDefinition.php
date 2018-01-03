@@ -16,6 +16,7 @@ class ProcessFactoryNodeDefinition extends ArrayNodeDefinition
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('binary_path')->defaultValue('%kernel.root_dir%/../bin/console')->end()
+                ->scalarNode('command')->defaultValue('webit_message_bus:publish')->end()
                 ->scalarNode('environment')->defaultValue('%kernel.environment%')->end()
                 ->arrayNode('env_vars')
                     ->scalarPrototype()->cannotBeEmpty()->end()
