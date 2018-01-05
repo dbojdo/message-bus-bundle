@@ -5,7 +5,6 @@ namespace Webit\MessageBusBundle\Tests\Integration\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\Common\Cache\Cache;
-use JMS\Serializer\EventDispatcher\Event;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\Assert;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -25,7 +24,6 @@ use Webit\MessageBus\Infrastructure\Amqp\Publisher\AmqpPublisher;
 use Webit\MessageBus\Infrastructure\Amqp\Publisher\Registry\PublisherRegistry;
 use Webit\MessageBus\Infrastructure\Amqp\Util\Queue\Queue;
 use Webit\MessageBus\Infrastructure\Amqp\Util\Queue\QueueManager;
-use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Publisher\EventDispatcherPublisher;
 use Webit\MessageBus\Message;
 use Webit\MessageBus\Publisher;
 use Webit\MessageBusBundle\Tests\Integration\Context\Bootstrap\AnnotationReaderRegistrar;
@@ -143,26 +141,7 @@ final class BundleContext extends BundleConfigurationContext
             );
 
             Assert::assertInstanceOf(
-                AmqpPublisher::class,
-                $publisherRegistry->getPublisher($publisherName)
-            );
-        }
-    }
-
-    /**
-     * @Then then the following Symfony Event Dispatcher publishers should be available
-     */
-    public function thenTheFollowingSymfonyEventDispatcherPublishersShouldBeAvailable(PyStringNode $strPublishers)
-    {
-        $publishers = explode(',', $strPublishers->getRaw());
-        $container = $this->kernel->getContainer();
-
-        /** @var \Webit\MessageBus\PublisherRegistry $amqpPublisherRegistry */
-        $publisherRegistry = $container->get('webit_message_bus.publisher_registry');
-
-        foreach ($publishers as $publisherName) {
-            Assert::assertInstanceOf(
-                EventDispatcherPublisher::class,
+                Publisher::class,
                 $publisherRegistry->getPublisher($publisherName)
             );
         }
@@ -495,7 +474,7 @@ final class BundleContext extends BundleConfigurationContext
      */
     public function theMessagesShouldBePublishedAsynchronously()
     {
-        $maxWait = 3 * 1000000;
+        $maxWait = 5 * 1000000;
         $waited = 0;
         do {
             $allGood = $this->checkMessages();

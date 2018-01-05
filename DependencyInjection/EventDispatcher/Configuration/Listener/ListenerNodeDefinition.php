@@ -4,6 +4,7 @@ namespace Webit\MessageBusBundle\DependencyInjection\EventDispatcher\Configurati
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
+use Webit\MessageBusBundle\DependencyInjection\Configuration\Consumer\ConsumerNodeDefinition;
 
 class ListenerNodeDefinition extends ArrayNodeDefinition
 {
@@ -12,23 +13,20 @@ class ListenerNodeDefinition extends ArrayNodeDefinition
         parent::__construct('event_dispatcher', $parent);
 
         $this
-            ->validate()
-                ->ifTrue(function ($node) {
-                    return !isset($node['consumer']) && !isset($node['forward_to']);
+            ->beforeNormalization()
+                ->always(function ($node) {
+                    if (isset($node['forward_to'])) {
+                        $node['consumer'] = ['forward_to' => $node['forward_to']];
+                        unset($node['forward_to']);
+                    }
+
+                    return $node;
                 })
-                ->thenInvalid('One of the keys ["consumer",  "forward_to"] must be set.')
-                ->end()
-            ->validate()
-                ->ifTrue(function ($node) {
-                    return isset($node['consumer']) && isset($node['forward_to']);
-                })
-                ->thenInvalid('Only one of the keys ["consumer",  "forward_to"] must be set.')
             ->end()
             ->children()
                 ->append(new EventDispatcherNodeDefinition())
                 ->append(new MessageFactoriesNodeDefinition())
-                ->scalarNode('forward_to')->cannotBeEmpty()->end()
-                ->scalarNode('consumer')->cannotBeEmpty()->end()
+                ->append(new ConsumerNodeDefinition())
             ->end();
     }
 }

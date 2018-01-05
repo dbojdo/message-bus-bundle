@@ -2,10 +2,10 @@
 
 namespace Webit\MessageBusBundle\DependencyInjection\Command\Configuration;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
+use Webit\MessageBusBundle\DependencyInjection\Configuration\Publisher\AbstractPublisherNodeDefinition;
 
-class PublisherNodeDefinition extends ArrayNodeDefinition
+class PublisherNodeDefinition extends AbstractPublisherNodeDefinition
 {
     public function __construct(NodeParentInterface $parent = null)
     {

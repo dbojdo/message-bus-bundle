@@ -47,11 +47,7 @@ Feature: AMQP Publisher configuration
                           supports: [event3]
     """
     When I bootstrap the application
-    Then then the following Symfony Event Dispatcher publishers should be available
-    """
-    my_sf_publisher
-    """
-    And the message "event1" should be publishable over "my_sf_publisher" Symfony Event Dispatcher publisher
+    Then the message "event1" should be publishable over "my_sf_publisher" Symfony Event Dispatcher publisher
     And the message "event2" should be publishable over "my_sf_publisher" Symfony Event Dispatcher publisher
     And the message "event3" should be publishable over "my_sf_publisher" Symfony Event Dispatcher publisher
     And the message "event4" should be publishable over "my_sf_publisher" Symfony Event Dispatcher publisher

@@ -2,10 +2,10 @@
 
 namespace Webit\MessageBusBundle\DependencyInjection\Amqp\Configuration;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
+use Webit\MessageBusBundle\DependencyInjection\Configuration\Publisher\AbstractPublisherNodeDefinition;
 
-class PublisherNodeDefinition extends ArrayNodeDefinition
+class PublisherNodeDefinition extends AbstractPublisherNodeDefinition
 {
     /**
      * @param NodeParentInterface|null $parent

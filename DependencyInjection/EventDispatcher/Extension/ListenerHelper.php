@@ -12,22 +12,24 @@ use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\Con
 use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\Content\PhpSerializeEventSerialiser;
 use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\FallingBackMessageFromEventFactory;
 use Webit\MessageBus\Infrastructure\Symfony\EventDispatcher\Listener\Message\GenericMessageFromEventFactory;
-use Webit\MessageBus\Publisher;
-use Webit\MessageBus\Consumer\PublishingConsumer;
-use Webit\MessageBus\Consumer\VoidConsumer;
+use Webit\MessageBusBundle\DependencyInjection\ConsumerExtensionHelper;
 
 final class ListenerHelper
 {
     /** @var ContainerBuilder */
     private $container;
 
+    /** @var ConsumerExtensionHelper */
+    private $consumerExtensionHelper;
+
     /**
      * PublisherHelper constructor.
-     * @param $container
+     * @param ContainerBuilder $container
      */
     public function __construct(ContainerBuilder $container)
     {
         $this->container = $container;
+        $this->consumerExtensionHelper = new ConsumerExtensionHelper();
     }
 
     public static function byEventNameMessageFromEventFactoryName($listenerName): string
@@ -37,16 +39,7 @@ final class ListenerHelper
 
     public function createListener($listenerName, $listenerConfig): Definition
     {
-        switch (true) {
-            case isset($listenerConfig['consumer']):
-                $consumer = new Reference($listenerConfig['consumer']);
-                break;
-            case isset($listenerConfig['forward_to']):
-                $consumer = new Definition(PublishingConsumer::class, [$this->publisherServiceDefinition($listenerConfig['forward_to'])]);
-                break;
-            default:
-                $consumer = new Definition(VoidConsumer::class);
-        }
+        $consumer = $this->consumerExtensionHelper->createConsumer($listenerConfig['consumer']);
 
         $supportedEvents = [];
         $fallbackFactory = null;
@@ -185,15 +178,5 @@ final class ListenerHelper
         throw new InvalidConfigurationException(
             sprintf('Unsupported message type resolver type "%s"', $config['type'])
         );
-    }
-
-    private function publisherServiceDefinition($publisherName): Definition
-    {
-        $definition = new Definition(
-            Publisher::class,
-            [$publisherName]
-        );
-        $definition->setFactory([new Reference('webit_message_bus.publisher_registry'), 'getPublisher']);
-        return $definition;
     }
 }

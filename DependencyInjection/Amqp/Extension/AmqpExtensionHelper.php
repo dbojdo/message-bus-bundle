@@ -22,6 +22,7 @@ use Webit\MessageBus\Consumer\PublishingConsumer;
 use Webit\MessageBusBundle\DependencyInjection\Amqp\ConnectionPoolTag;
 use Webit\MessageBusBundle\DependencyInjection\Amqp\ListenerTag;
 use Webit\MessageBusBundle\DependencyInjection\Amqp\PublisherTag;
+use Webit\MessageBusBundle\DependencyInjection\ConsumerExtensionHelper;
 
 final class AmqpExtensionHelper
 {
@@ -31,10 +32,14 @@ final class AmqpExtensionHelper
     /** @var XmlFileLoader */
     private $loader;
 
+    /** @var ConsumerExtensionHelper */
+    private $consumerExtensionHelper;
+
     public function __construct(ContainerBuilder $container, XmlFileLoader $loader)
     {
         $this->container = $container;
         $this->loader = $loader;
+        $this->consumerExtensionHelper = new ConsumerExtensionHelper();
     }
 
     public static function hasAmqp(): bool
@@ -103,6 +108,9 @@ final class AmqpExtensionHelper
 
         $tag = new PublisherTag($publisherName);
         $publisher->addTag(PublisherTag::name(), $tag->options());
+        $publisher->setLazy(true);
+
+        $this->container->setDefinition(sprintf('webit_message_bus.publisher.amqp.%s', $publisherName), $publisher);
 
         return $publisher;
     }
@@ -153,16 +161,8 @@ final class AmqpExtensionHelper
         $amqpConsumerBuilder->addMethodCall('setLogger', [new Reference('logger')]);
 
         $consumer = null;
-
         if (isset($config['consumer'])) {
-            $consumer = new Reference($config['consumer']);
-        }
-
-        if (isset($config['forward_to'])) {
-            $consumer = new Definition(PublishingConsumer::class, [$this->publisherServiceDefinition($config['forward_to'])]);
-        }
-
-        if ($consumer) {
+            $consumer = $this->consumerExtensionHelper->createConsumer($config['consumer']);
             $amqpConsumerBuilder->addMethodCall('setConsumer', [$consumer]);
         }
 
@@ -184,15 +184,5 @@ final class AmqpExtensionHelper
         $listener->addTag(ListenerTag::name(), $tag->options());
 
         return $listener;
-    }
-
-    private function publisherServiceDefinition($publisherName): Definition
-    {
-        $definition = new Definition(
-            Publisher::class,
-            [$publisherName]
-        );
-        $definition->setFactory([new Reference('webit_message_bus.publisher_registry'), 'getPublisher']);
-        return $definition;
     }
 }
