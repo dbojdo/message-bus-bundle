@@ -16,7 +16,7 @@ class PublishersNodeDefinition extends ArrayNodeDefinition
         parent::__construct($name, $parent);
 
         $this
-            ->arrayPrototype()
+            ->prototype('array')
                 ->beforeNormalization()
                     ->always(function ($node) {
                         if (!isset($node['on_exception'])) {

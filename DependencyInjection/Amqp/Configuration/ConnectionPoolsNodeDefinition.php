@@ -15,8 +15,8 @@ class ConnectionPoolsNodeDefinition extends ArrayNodeDefinition
         parent::__construct('connection_pools', $parent);
 
         $this
-            ->arrayPrototype()
-                ->arrayPrototype()
+            ->prototype('array')
+                ->prototype('array')
                     ->children()
                         ->scalarNode('host')->cannotBeEmpty()->isRequired()->end()
                         ->scalarNode('port')->defaultValue(self::DEFAULT_PORT)->end()

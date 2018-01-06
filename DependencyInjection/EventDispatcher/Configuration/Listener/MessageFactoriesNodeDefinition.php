@@ -13,7 +13,7 @@ class MessageFactoriesNodeDefinition extends ArrayNodeDefinition
 
         $this
             ->isRequired()->requiresAtLeastOneElement()
-            ->arrayPrototype()
+            ->prototype('array')
                 ->validate()
                     ->ifTrue(function ($node) {
                         return !(isset($node['jms']) || isset($node['php']) || isset($node['service']));
@@ -24,7 +24,7 @@ class MessageFactoriesNodeDefinition extends ArrayNodeDefinition
                     ->append(new PhpSerializeMessageFactoryNodeDefinition())
                     ->append(new ServiceMessageFactoryNodeDefinition())
                     ->arrayNode('supports')
-                        ->scalarPrototype()->cannotBeEmpty()->end()
+                        ->prototype('scalar')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
             ->end();

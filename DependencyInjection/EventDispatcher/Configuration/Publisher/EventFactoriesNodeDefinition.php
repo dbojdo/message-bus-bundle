@@ -27,7 +27,7 @@ class EventFactoriesNodeDefinition extends ArrayNodeDefinition
                 })
                 ->thenInvalid('Only one factory can be marked as "fallback".')
             ->end()
-            ->arrayPrototype()
+            ->prototype('array')
                 ->validate()
                     ->ifTrue(function ($node) {
                         return !(isset($node['jms']) || isset($node['php']) || isset($node['service']));
@@ -38,7 +38,7 @@ class EventFactoriesNodeDefinition extends ArrayNodeDefinition
                     ->append(new PhpUnserializeEventFactoryNodeDefinition())
                     ->append(new ServiceEventFactoryNodeDefinition())
                     ->arrayNode('supports')
-                        ->scalarPrototype()->cannotBeEmpty()->end()
+                        ->prototype('scalar')->cannotBeEmpty()->end()
                     ->end()
                     ->booleanNode('fallback')->defaultValue(false)->end()
                 ->end()

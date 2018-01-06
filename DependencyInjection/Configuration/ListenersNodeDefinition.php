@@ -14,7 +14,7 @@ class ListenersNodeDefinition extends ArrayNodeDefinition
         parent::__construct($name, $parent);
 
         $this
-            ->arrayPrototype()
+            ->prototype('array')
                 ->validate()
                     ->ifTrue(function ($node) {
                         return isset($node['amqp']) && isset($node['event_dispatcher']);

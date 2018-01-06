@@ -19,7 +19,7 @@ class ProcessFactoryNodeDefinition extends ArrayNodeDefinition
                 ->scalarNode('command')->defaultValue('webit_message_bus:publish')->end()
                 ->scalarNode('environment')->defaultValue('%kernel.environment%')->end()
                 ->arrayNode('env_vars')
-                    ->scalarPrototype()->cannotBeEmpty()->end()
+                    ->prototype('scalar')->cannotBeEmpty()->end()
                 ->end()
             ->end();
     }

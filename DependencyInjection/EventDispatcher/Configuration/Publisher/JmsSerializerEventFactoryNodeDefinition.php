@@ -20,14 +20,14 @@ class JmsSerializerEventFactoryNodeDefinition extends ArrayNodeDefinition
                 ->scalarNode('serializer')->defaultValue('jms_serializer')->cannotBeEmpty()->end()
                 ->enumNode('format')->values(['json', 'xml'])->defaultValue('json')->cannotBeEmpty()->end()
                 ->arrayNode('types_map')
-                    ->arrayPrototype()
+                    ->prototype('array')
                         ->beforeNormalization()
                             ->ifString()
                             ->then(function ($node) {
                                 return (array)$node;
                             })
                         ->end()
-                        ->scalarPrototype()->end()
+                        ->prototype('scalar')->end()
                         ->requiresAtLeastOneElement()
                     ->end()
                 ->end()
