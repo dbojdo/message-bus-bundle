@@ -63,7 +63,7 @@ final class ListenerHelper
             }
 
             if ($messageFactoryDefinition instanceof Definition) {
-                $messageFactoryDefinition->setPrivate(true);
+                $messageFactoryDefinition->setPublic(false);
                 $messageFactoryDefinition->setLazy(true);
             }
 

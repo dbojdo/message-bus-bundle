@@ -71,7 +71,7 @@ final class PublisherHelper
 
             if ($eventFactoryDefinition instanceof Definition) {
                 $eventFactoryDefinition->setLazy(true);
-                $eventFactoryDefinition->setPrivate(true);
+                $eventFactoryDefinition->setPublic(false);
 
                 $this->container->setDefinition(
                     $factoryService,
@@ -89,7 +89,7 @@ final class PublisherHelper
         }
 
         $byTypeFactory = new Definition(ByMessageTypeMessageBusEventFactory::class, [$byTypeFactories]);
-        $byTypeFactory->setPrivate(true);
+        $byTypeFactory->setPublic(false);
 
         $this->container->setDefinition(
             $byTypeFactoryService = self::byTypeEventFromMessageFactoryName($publisherName),
