@@ -73,7 +73,7 @@ final class ListenerHelper
                 $supportedEvents[] = $eventName;
             }
 
-            if ($messageFactory['fallback']) {
+            if (isset($messageFactory['fallback'])) {
                 $fallbackFactory = new Reference($messageFactoryService);
             }
 

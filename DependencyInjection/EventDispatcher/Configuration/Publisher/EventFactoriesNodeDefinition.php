@@ -17,7 +17,7 @@ class EventFactoriesNodeDefinition extends ArrayNodeDefinition
                 ->ifTrue(function ($node) {
                     $hasFallback = false;
                     foreach ($node as $factory) {
-                        if ($hasFallback && $factory['fallback']) {
+                        if ($hasFallback && isset($factory['fallback'])) {
                             return true;
                         }
                         $hasFallback = $factory['fallback'];
