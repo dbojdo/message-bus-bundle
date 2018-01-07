@@ -64,7 +64,7 @@ final class ListenerHelper
 
             if ($messageFactoryDefinition instanceof Definition) {
                 $messageFactoryDefinition->setPublic(false);
-                $messageFactoryDefinition->setLazy(true);
+//                $messageFactoryDefinition->setLazy(true);
             }
 
             $supportedEvents = array_merge($supportedEvents, $messageFactory['supports']);

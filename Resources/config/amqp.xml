@@ -19,6 +19,12 @@
             </call>
         </service>
 
-
+        <service id="webit_message_bus.amqp.start_listener_command" class="Webit\MessageBus\Infrastructure\Amqp\Listener\Command\StartListenerCommand">
+            <argument type="service" id="webit_message_bus.amqp.listeners" />
+            <call method="setName">
+                <argument type="string">webit_message_bus:amqp:start_listener</argument>
+            </call>
+            <tag name="console.command" />
+        </service>
     </services>
 </container>

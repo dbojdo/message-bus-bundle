@@ -14,6 +14,7 @@ class ListenersNodeDefinition extends ArrayNodeDefinition
         parent::__construct($name, $parent);
 
         $this
+            ->useAttributeAsKey('name', true)
             ->prototype('array')
                 ->validate()
                     ->ifTrue(function ($node) {

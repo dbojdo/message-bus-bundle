@@ -70,7 +70,7 @@ final class PublisherHelper
             }
 
             if ($eventFactoryDefinition instanceof Definition) {
-                $eventFactoryDefinition->setLazy(true);
+//                $eventFactoryDefinition->setLazy(true);
                 $eventFactoryDefinition->setPublic(false);
 
                 $this->container->setDefinition(
@@ -83,7 +83,7 @@ final class PublisherHelper
                 $byTypeFactories[$messageType] = $eventFactoryDefinition;
             }
 
-            if ($eventFactory['fallback']) {
+            if (isset($eventFactory['fallback'])) {
                 $fallbackFactory = new Reference($factoryService);
             }
         }

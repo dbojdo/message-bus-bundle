@@ -30,7 +30,7 @@ class PublisherTypeExceptionNodeDefinition extends ArrayNodeDefinition
             ->end()
             ->children()
                 ->scalarNode('service')->end()
-                ->scalarNode('logger')->defaultValue('logger')->end()
+                ->scalarNode('logger')->defaultNull()->end()
                 ->enumNode('strategy')->values(['ignore', 'throw'])->defaultValue('throw')->end()
                 ->scalarNode('forward_to')->end()
             ->end();

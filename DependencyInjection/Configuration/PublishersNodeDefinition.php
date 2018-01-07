@@ -16,6 +16,7 @@ class PublishersNodeDefinition extends ArrayNodeDefinition
         parent::__construct($name, $parent);
 
         $this
+            ->useAttributeAsKey('name', true)
             ->prototype('array')
                 ->beforeNormalization()
                     ->always(function ($node) {

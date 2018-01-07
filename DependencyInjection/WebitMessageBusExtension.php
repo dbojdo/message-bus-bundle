@@ -89,7 +89,7 @@ class WebitMessageBusExtension extends Extension
             if (isset($publisherConfig['on_exception'])) {
                 $publisherDefinition = $this->wrapPublisherWithExceptionHandler($publisherDefinition, $publisherConfig['on_exception']);
             }
-            $publisherDefinition->setLazy(true);
+//            $publisherDefinition->setLazy(true);
 
             $tag = new PublisherTag($publisherName);
             $publisherDefinition->addTag(PublisherTag::name(), $tag->options());
@@ -176,7 +176,7 @@ class WebitMessageBusExtension extends Extension
             );
         }
 
-        if ($handlerConfig['forward_to']) {
+        if (isset($handlerConfig['forward_to'])) {
             $publisher = new Definition(Publisher::class, [$handlerConfig['forward_to']]);
             $publisher->setFactory([new Reference('webit_message_bus.publisher_registry'), 'getPublisher']);
 

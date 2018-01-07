@@ -70,7 +70,7 @@ final class AmqpExtensionHelper
     {
         $poolFactory = new Definition(ConnectionPoolBuilder::class);
         $poolFactory->setFactory([ConnectionPoolBuilder::class, 'create']);
-        $poolFactory->addMethodCall('setLogger', [new Reference('logger')]);
+//        $poolFactory->addMethodCall('setLogger', [new Reference('logger')]);
 
         $pool = new Definition(ConnectionPool::class);
         $pool->setFactory([$poolFactory, 'build']);
@@ -108,7 +108,7 @@ final class AmqpExtensionHelper
 
         $tag = new PublisherTag($publisherName);
         $publisher->addTag(PublisherTag::name(), $tag->options());
-        $publisher->setLazy(true);
+//        $publisher->setLazy(true);
 
         $this->container->setDefinition(sprintf('webit_message_bus.publisher.amqp.%s', $publisherName), $publisher);
 
@@ -158,7 +158,7 @@ final class AmqpExtensionHelper
     public function createListener(string $listenerName, array $config): Definition
     {
         $amqpConsumerBuilder = new Definition(AmqpConsumerBuilder::class);
-        $amqpConsumerBuilder->addMethodCall('setLogger', [new Reference('logger')]);
+//        $amqpConsumerBuilder->addMethodCall('setLogger', [new Reference('logger')]);
 
         $consumer = null;
         if (isset($config['consumer'])) {
