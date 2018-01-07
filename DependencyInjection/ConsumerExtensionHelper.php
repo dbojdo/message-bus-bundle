@@ -93,7 +93,7 @@ class ConsumerExtensionHelper
                 );
         }
 
-        if ($handlerConfig['logger']) {
+        if (isset($handlerConfig['logger'])) {
             $handler = new Definition(
                 LoggingExceptionHandler::class,
                 [
@@ -104,7 +104,7 @@ class ConsumerExtensionHelper
             );
         }
 
-        if ($handlerConfig['forward_to']) {
+        if (isset($handlerConfig['forward_to'])) {
             $publisher = new Definition(Publisher::class, [$handlerConfig['forward_to']]);
             $publisher->setFactory([new Reference('webit_message_bus.publisher_registry'), 'getPublisher']);
 
