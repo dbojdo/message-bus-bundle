@@ -13,6 +13,7 @@ Feature: Publish command
         message_cache:
             class: Doctrine\Common\Cache\FilesystemCache
             arguments: ["%kernel.cache_dir%/messages"]
+            public: true
 
         publisher:
             class: Webit\MessageBusBundle\Tests\Integration\Context\Bootstrap\Fake\Publisher\CommandPublisher

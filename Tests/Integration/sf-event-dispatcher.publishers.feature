@@ -14,6 +14,7 @@ Feature: AMQP Publisher configuration
         secret: "my-secret-hash"
     """
 
+  @current
   Scenario: Symfony Event Dispatcher Publisher config
     Given the configuration contains:
     """

@@ -9,12 +9,12 @@ Feature: Publish command
     services:
         mocked.event_dispatcher1:
             synthetic: true
+            public: true
 
     framework:
         secret: "my-secret-hash"
     """
 
-#  @current
   Scenario: Synchronous PublishCommand Publisher config
     Given the configuration contains:
     """
@@ -22,6 +22,7 @@ Feature: Publish command
         message_cache:
             class: Doctrine\Common\Cache\FilesystemCache
             arguments: ["%kernel.cache_dir%/messages"]
+            public: true
 
         publisher:
             class: Webit\MessageBusBundle\Tests\Integration\Context\Bootstrap\Fake\Publisher\CommandPublisher
@@ -34,16 +35,15 @@ Feature: Publish command
             my_command_publisher:
               command:
                   process_factory:
-                      binary_path: %kernel.root_dir%/bin/console
+                      binary_path: "%kernel.root_dir%/bin/console"
                       env_vars:
-                          SF_KERNEL_CONFIG: %kernel.config%
-                          SF_KERNEL_HASH: %kernel.hash%
+                          SF_KERNEL_CONFIG: "%kernel.config%"
+                          SF_KERNEL_HASH: "%kernel.hash%"
                   forward_to: my_publisher
     """
     When I publish the message to the "my_command_publisher" publisher
     Then the message should be published
-
-  @current
+    
   Scenario: Asynchronous PublishCommand Publisher config
     Given the configuration contains:
     """
@@ -63,10 +63,10 @@ Feature: Publish command
             my_command_publisher:
               command:
                   process_factory:
-                      binary_path: %kernel.root_dir%/bin/console
+                      binary_path: "%kernel.root_dir%/bin/console"
                       env_vars:
-                          SF_KERNEL_CONFIG: %kernel.config%
-                          SF_KERNEL_HASH: %kernel.hash%
+                          SF_KERNEL_CONFIG: "%kernel.config%"
+                          SF_KERNEL_HASH: "%kernel.hash%"
                   forward_to: my_publisher
                   async:
                       max_processes: 2

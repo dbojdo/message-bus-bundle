@@ -12,7 +12,6 @@ class ProcessFactoryNodeDefinition extends ArrayNodeDefinition
         parent::__construct('process_factory', $parent);
 
         $this
-            ->cannotBeEmpty()
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('binary_path')->defaultValue('%kernel.root_dir%/../bin/console')->end()

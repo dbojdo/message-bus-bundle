@@ -19,7 +19,6 @@ class EventDispatcherNodeDefinition extends ArrayNodeDefinition
                 })
             ->end()
             ->addDefaultsIfNotSet()
-            ->cannotBeEmpty()
             ->children()
                 ->scalarNode('listener_tag')->defaultValue('kernel.event_listener')->cannotBeEmpty()->end()
             ->end();

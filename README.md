@@ -45,5 +45,5 @@ class AppKernel extends \Symfony\Component\HttpKernel\Kernel
 ```bash
 docker-compose run --rm composer
 docker-compose run --rm phpunit
-docker-compose run --rm behat
+webit_message_bus.amqp.listeners
 ```

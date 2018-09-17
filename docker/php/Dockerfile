@@ -1,11 +1,12 @@
-FROM php:7.0-cli
+FROM php:7.2-cli
 
 RUN apt-get update && apt-get install -y \
-       libmcrypt-dev \
        libpq-dev \
        git \
        subversion \
-   && docker-php-ext-install -j$(nproc) iconv mcrypt bcmath \
+       zlib1g-dev \
+       zip \
+   && docker-php-ext-install -j$(nproc) iconv bcmath \
    && docker-php-ext-install -j$(nproc) zip \
    && pecl install apcu \
    && docker-php-ext-enable apcu \

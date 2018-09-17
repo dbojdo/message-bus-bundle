@@ -1,6 +1,6 @@
 default:
     suites:
         main:
-            paths: [ %paths.base%/Tests/Integration]
+            paths: [ "%paths.base%/Tests/Integration"]
             contexts:
                 - "Webit\\MessageBusBundle\\Tests\\Integration\\Context\\BundleContext"

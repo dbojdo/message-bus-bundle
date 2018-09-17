@@ -12,6 +12,7 @@ final class AmqpPublisherPass implements CompilerPassInterface
     {
         $publishersMap = [];
         foreach ($container->findTaggedServiceIds(PublisherTag::name()) as $serviceId => $tags) {
+            $container->findDefinition($serviceId)->setPublic(true);
             foreach ($this->registerPublisher($serviceId, $tags) as $publisherName) {
                 $publishersMap[$publisherName] = $serviceId;
             }

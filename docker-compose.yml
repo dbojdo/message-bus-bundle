@@ -20,13 +20,6 @@ services:
         links:
           - rabbitmq
 
-#    integration-tests:
-#        extends:
-#          service: src
-#        links:
-#            - rabbitmq
-#        command: ./vendor/bin/phpunit -c tests/integration/phpunit.xml.dist
-
     composer:
         extends:
             service: src

@@ -5,7 +5,10 @@
         http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="webit_message_bus.publisher_registry" alias="webit_message_bus.publisher_registry.container_aware" />
+        <defaults autoconfigure="true" public="false" />
+        <prototype namespace="Webit\MessageBusBundle\Command\" resource="../../Command/*" />
+
+        <service id="webit_message_bus.publisher_registry" alias="webit_message_bus.publisher_registry.container_aware" public="true" />
         <service id="webit_message_bus.publisher_registry.container_aware" class="Webit\MessageBusBundle\Publisher\ContainerAwarePublisherRegistry">
             <argument type="collection" />
             <call method="setContainer">

@@ -17,7 +17,7 @@ class PublisherNodeDefinition extends AbstractPublisherNodeDefinition
         $this
             ->children()
                 ->scalarNode('message_factory')->defaultNull()->end()
-                ->arrayNode('target')->isRequired()->cannotBeEmpty()
+                ->arrayNode('target')->isRequired()
                     ->validate()
                         ->ifTrue(function ($node) {
                             return !isset($node['exchange']) && !isset($node['queue']);
@@ -32,7 +32,7 @@ class PublisherNodeDefinition extends AbstractPublisherNodeDefinition
                     ->end()
                     ->children()
                         ->scalarNode('pool')->isRequired()->cannotBeEmpty()->end()
-                        ->arrayNode('exchange')->cannotBeEmpty()
+                        ->arrayNode('exchange')
                             ->beforeNormalization()
                                 ->ifString()
                                 ->then(function ($node) {

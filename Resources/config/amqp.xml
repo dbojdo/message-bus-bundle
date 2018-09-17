@@ -5,10 +5,10 @@
         http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="webit_message_bus.amqp.connection_pools" alias="webit_message_bus.amqp.registry.container_aware" />
-        <service id="webit_message_bus.amqp.connections" alias="webit_message_bus.amqp.registry.container_aware" />
-        <service id="webit_message_bus.amqp.listeners" alias="webit_message_bus.amqp.registry.container_aware" />
-        <service id="webit_message_bus.amqp.publishers" alias="webit_message_bus.amqp.registry.container_aware" />
+        <service id="webit_message_bus.amqp.connection_pools" alias="webit_message_bus.amqp.registry.container_aware" public="true" />
+        <service id="webit_message_bus.amqp.connections" alias="webit_message_bus.amqp.registry.container_aware" public="true" />
+        <service id="webit_message_bus.amqp.listeners" alias="webit_message_bus.amqp.registry.container_aware" public="true" />
+        <service id="webit_message_bus.amqp.publishers" alias="webit_message_bus.amqp.registry.container_aware" public="true" />
 
         <service id="webit_message_bus.amqp.registry.container_aware" class="Webit\MessageBusBundle\Amqp\AmqpRegistry">
             <argument type="collection" />

@@ -12,6 +12,7 @@ final class AmqpListenerPass implements CompilerPassInterface
     {
         $listenersMap = [];
         foreach ($container->findTaggedServiceIds(ListenerTag::name()) as $serviceId => $tags) {
+            $container->findDefinition($serviceId)->setPublic(true);
             foreach ($this->registerListener($serviceId, $tags) as $listenerName) {
                 $listenersMap[$listenerName] = $serviceId;
             }

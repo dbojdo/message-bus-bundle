@@ -14,6 +14,7 @@ final class AmqpConnectionPoolPass implements CompilerPassInterface
         $poolMap = [];
 
         foreach ($container->findTaggedServiceIds(ConnectionPoolTag::name()) as $serviceId => $tags) {
+            $container->findDefinition($serviceId)->setPublic(true);
             foreach ($this->registerConnectionPool($serviceId, $tags) as $poolName) {
                 $poolMap[$poolName] = $serviceId;
             }

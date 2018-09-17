@@ -27,6 +27,7 @@ Feature: AMQP Publisher configuration
     services:
         mocked.my_consumer:
             synthetic: true
+            public: true
         my_consumer:
             class: Webit\MessageBusBundle\Tests\Integration\Context\Bootstrap\Fake\SpyableConsumer
             arguments: ["@mocked.my_consumer"]

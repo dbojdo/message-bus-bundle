@@ -2,7 +2,7 @@
 
 namespace Webit\MessageBusBundle\DependencyInjection\Compiler;
 
-use Webit\MessageBusBundle\DependencyInjection\Compiler\Exception\IncompleteTagDefinitionException;
+use Webit\MessageBusBundle\DependencyInjection\Tag\IncompleteTagDefinitionException;
 
 final class PublisherTag
 {

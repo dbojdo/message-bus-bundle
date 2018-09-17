@@ -20,11 +20,11 @@ class PublicationExceptionNodeDefinitionTest extends AbstractConfigurationNodeTe
             'on_exception' => [
                 'unsupported_message' => [
                     'strategy' => 'throw',
-                    'logger' => 'logger',
+                    'logger' => null,
                 ],
                 'default' => [
                     'strategy' => 'throw',
-                    'logger' => 'logger',
+                    'logger' => null,
                 ]
             ]
         ];
@@ -117,7 +117,7 @@ YAML;
                     ],
                     'default' => [
                         'strategy' => 'throw',
-                        'logger' => 'logger',
+                        'logger' => null
                     ]
                 ]
             ],
